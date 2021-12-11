@@ -30,8 +30,17 @@ const UserSchema = new Schema({
         type: 'string',
         required: true
     },
+    function:{
+        type: 'string',
+        required: true,
+        default: 'aluno',
+    },
     address: {
         zipcode: {
+            type: 'string',
+            required: true
+        },
+        number:{
             type: 'string',
             required: true
         },
@@ -44,6 +53,10 @@ const UserSchema = new Schema({
             required: true
         },
         city:{
+            type: 'string',
+            required: true
+        },
+        state:{
             type: 'string',
             required: true
         },

@@ -8,7 +8,7 @@ import PasswordRecovery from './schemas/password-recover'
 
 class UserController {
 
-    public async findUsers(req: Request, res: Response): Promise<any> {
+    async findUsers(req: Request, res: Response): Promise<any> {
         const query = req.query
         let result
         if (query.name) {
@@ -116,20 +116,29 @@ class UserController {
         const data = req.body
         const userId = req.userId
 
-        const address = {
-            zipcode: data.zipcode,
-            street: data.street,
-            district: data.district,
-            city: data.city,
-            country: data.country
-
-        }
-
-        await User.updateOne({ _id: userId }, { $set: { name: data.name, address: address } })
+        await User.updateOne({ _id: userId }, { $set: { name: data.name, function: data.function } })
 
         return res.status(200).send({ message: "Alterações aplicadas com sucesso " })
     }
 
+    async updateUserAddress(req: Request, res: Response) {
+        const data = req.body
+        const userId = req.userId
+
+        const newAddress = {
+                "zipcode": data.zipcode,
+                "number": data.number,
+                "street": data.street,
+                "district": data.district,
+                "city": data.city,
+                "state": data.state,
+                "country": data.country
+        }
+       
+
+        await User.updateOne({ _id: userId }, { $set: { address: newAddress } })
+        return res.status(200).send({message: "enedeço atualizado com sucesso"})
+    }
 }
 
 export default new UserController();

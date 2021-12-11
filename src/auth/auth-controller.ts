@@ -17,7 +17,6 @@ class AuthController {
             return res.status(401).send({ message: "Usuário ou senha inválidos." })
         }
 
-        console.log(userData._id)
         const token = jwt.sign({ id: userData._id }, "1221321dsdskadasxcc", { expiresIn: 5000 })
 
         return res.json({ id:userData._id, tokenauth: true, user: userData.name, token })

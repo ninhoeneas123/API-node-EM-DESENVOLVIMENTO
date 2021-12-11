@@ -14,5 +14,8 @@ userRouter.post('/users/recovery-password', UserController.passwordRecovery)
 userRouter.post('/users/new-password', authMiddleware, UserController.newPassword)
 userRouter.delete('/users/delete/:id', authMiddleware, UserController.deleteUser)
 userRouter.put('/users/update', authMiddleware, UserController.updateUser)
+userRouter.put('/users/update-address', authMiddleware, UserController.updateUserAddress)
+
+
 
 export default userRouter
