@@ -14,6 +14,8 @@ interface UserInterface extends Document {
     email?: string
     password?: string
     address?: Array<Address>
+    function?: string
+    admin: boolean
 }
 
 const UserSchema = new Schema({
@@ -34,6 +36,10 @@ const UserSchema = new Schema({
         type: 'string',
         required: true,
         default: 'aluno',
+    },
+    admin:{
+        type: 'boolean',
+        default: false,
     },
     address: {
         zipcode: {

@@ -3,10 +3,13 @@ import bcrypt from 'bcrypt'
 import sendWelcomeMail from './mail/send-welcome-email'
 import SendRecoveryPassword from './mail/send-recovery-password'
 
+
 import User from './schemas/users-schema'
 import PasswordRecovery from './schemas/password-recover'
 
-class UserController {
+require('dotenv/config');
+
+const userController = {
 
     async findUsers(req: Request, res: Response): Promise<any> {
         const query = req.query
@@ -21,7 +24,7 @@ class UserController {
         }
         result = await User.find()
         return res.status(200).send(result)
-    }
+    },
 
     async registerUser(req: Request, res: Response): Promise<any> {
         const data = req.body
@@ -34,11 +37,15 @@ class UserController {
             "name": data.name.toLowerCase(),
             "password": hashPassword,
             "email": data.email,
+            "function": data.function,
+            "admin": data.admin,
             "address": {
                 "zipcode": data.address.zipcode,
+                "number":data.address.number,
                 "street": data.address.street,
                 "district": data.address.district,
                 "city": data.address.city,
+                "state":data.address.state,
                 "country": data.address.country
             }
         }
@@ -48,7 +55,7 @@ class UserController {
         }).catch(err => {
             return res.status(400).send(err.message)
         })
-    }
+    },
 
     async forgotPassword(req: Request, res: Response) {
         const data = req.body
@@ -73,7 +80,7 @@ class UserController {
         }
         return res.status(200).send({ message: "Caso o email esteja cadastrado no nosso sistema você recebera um código para recuperação de senha." })
 
-    }
+    },
     async passwordRecovery(req: Request, res: Response) {
         const data = req.body;
         const codeRecovery: any = await PasswordRecovery.find({ code: data.code })
@@ -89,7 +96,7 @@ class UserController {
 
         }
         return await res.status(400).send({ message: "Codigo de redefinicção de senha invalido" })
-    }
+    },
 
     async newPassword(req: Request, res: Response) {
         const data = req.body
@@ -102,7 +109,7 @@ class UserController {
         await User.updateOne({ _id: _id }, { $set: { password: newPassword } })
 
         return res.status(200).send({ message: "Senha alterada com sucesso" })
-    }
+    },
 
     async deleteUser(req: Request, res: Response) {
         const query = req.params
@@ -110,7 +117,7 @@ class UserController {
 
         await User.deleteOne({ _id: query.id })
         return res.status(200).send({ message: "Usuario excluido" })
-    }
+    },
 
     async updateUser(req: Request, res: Response) {
         const data = req.body
@@ -119,26 +126,52 @@ class UserController {
         await User.updateOne({ _id: userId }, { $set: { name: data.name, function: data.function } })
 
         return res.status(200).send({ message: "Alterações aplicadas com sucesso " })
-    }
+    },
 
     async updateUserAddress(req: Request, res: Response) {
         const data = req.body
         const userId = req.userId
 
         const newAddress = {
-                "zipcode": data.zipcode,
-                "number": data.number,
-                "street": data.street,
-                "district": data.district,
-                "city": data.city,
-                "state": data.state,
-                "country": data.country
+            "zipcode": data.zipcode,
+            "number": data.number,
+            "street": data.street,
+            "district": data.district,
+            "city": data.city,
+            "state": data.state,
+            "country": data.country
         }
-       
+
 
         await User.updateOne({ _id: userId }, { $set: { address: newAddress } })
-        return res.status(200).send({message: "enedeço atualizado com sucesso"})
+        return res.status(200).send({ message: "enedeço atualizado com sucesso" })
+    },
+
+    async createSuperAdmin() {
+        const superAdmin = await User.findOne({ email: process.env.SUPER_ADMIN_EMAIL })
+        if (!superAdmin) {
+            const hashPassword = await bcrypt.hash(process.env.SUPER_ADMIN_PASSWORD, 8);
+            const user = {
+                "name": process.env.SUPER_ADMIN_NAME,
+                "password": hashPassword,
+                "email": process.env.SUPER_ADMIN_EMAIL,
+                "function": "ADMIN",
+                "admin": true,
+                "address": {
+                    "zipcode": "XXXXXXX-XXXXXX",
+                    "number": "XXX",
+                    "street": "Rua dos admins",
+                    "district": "Arkahan",
+                    "city": "Arkahan.city",
+                    "state": "CA",
+                    "country": "US"
+                }
+            }
+            console.log("Create Super Admin" + process.env.SUPER_ADMIN_EMAIL)
+            await User.create(user)
+        }
+
     }
 }
 
-export default new UserController();
+export default userController;

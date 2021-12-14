@@ -1,15 +1,14 @@
-
 import * as nodemailer from "nodemailer";
-import SMTP_CONFIG from './configs';
+
 
 class Email {
     public  transporter = nodemailer.createTransport({
-        host: SMTP_CONFIG.host,
-        port: SMTP_CONFIG.port,
+        host: process.env.EMAIL_HOST,
+        port: parseInt(process.env.EMAIL_PORT),
         secure: false,
         auth: {
-            user: SMTP_CONFIG.user,
-            pass: SMTP_CONFIG.password
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD
         },
     });
 }

@@ -19,7 +19,6 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     const token = authorization.replace('Bearer', '').trim()
     try {
         const data = jwt.verify(token, "1221321dsdskadasxcc")
-        console.log(data)
 
         const { id } = data as TokenPayload 
 
