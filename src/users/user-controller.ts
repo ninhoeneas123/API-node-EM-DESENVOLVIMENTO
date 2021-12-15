@@ -12,6 +12,7 @@ require('dotenv/config');
 const userController = {
 
     async findUsers(req: Request, res: Response): Promise<any> {
+        console.log(req.userId)
         const query = req.query
         let result
         if (query.name) {
@@ -41,11 +42,11 @@ const userController = {
             "admin": data.admin,
             "address": {
                 "zipcode": data.address.zipcode,
-                "number":data.address.number,
+                "number": data.address.number,
                 "street": data.address.street,
                 "district": data.address.district,
                 "city": data.address.city,
-                "state":data.address.state,
+                "state": data.address.state,
                 "country": data.address.country
             }
         }
@@ -59,12 +60,14 @@ const userController = {
 
     async forgotPassword(req: Request, res: Response) {
         const data = req.body
-        const code = Math.floor(Math.random() * 1000000 + 1).toString()
 
         if (!data.email) return res.status(400).send({ message: "Por favor insira um Email" })
 
         const userEmail: any = await User.find({ email: data.email })
+
         if (userEmail) {
+            const code = Math.floor(Math.random() * 1000000 + 1).toString()
+
             SendRecoveryPassword.recoveryPassword(userEmail[0].email, code)
             const recoveryCodeCreation = {
                 "user": userEmail[0]._id,
@@ -92,7 +95,7 @@ const userController = {
             await User.updateOne({ _id: codeRecovery[0].user }, { $set: { password: newPassword } })
             await PasswordRecovery.deleteOne({ code: data.code })
 
-            return res.status(200).send("Nova senha definida com sucesso")
+            return res.status(201).send("Nova senha definida com sucesso")
 
         }
         return await res.status(400).send({ message: "Codigo de redefinicção de senha invalido" })
@@ -100,13 +103,14 @@ const userController = {
 
     async newPassword(req: Request, res: Response) {
         const data = req.body
-        const _id = req.userId
+        const id = req.userId
+        console.log(req.userId)
 
         if (!data.newPassword) return res.status(400).send("Insira uma nova senha")
 
         const newPassword = await bcrypt.hash(data.newPassword, 8);
 
-        await User.updateOne({ _id: _id }, { $set: { password: newPassword } })
+        await User.updateOne({ _id: id }, { $set: { password: newPassword } })
 
         return res.status(200).send({ message: "Senha alterada com sucesso" })
     },
@@ -116,14 +120,14 @@ const userController = {
 
 
         await User.deleteOne({ _id: query.id })
-        return res.status(200).send({ message: "Usuario excluido" })
+        return res.status(201).send({ message: "Usuario excluido" })
     },
 
     async updateUser(req: Request, res: Response) {
         const data = req.body
         const userId = req.userId
 
-        await User.updateOne({ _id: userId }, { $set: { name: data.name, function: data.function } })
+        await User.updateOne({ _id: userId }, { $set: { name: data.name } })
 
         return res.status(200).send({ message: "Alterações aplicadas com sucesso " })
     },
@@ -144,7 +148,7 @@ const userController = {
 
 
         await User.updateOne({ _id: userId }, { $set: { address: newAddress } })
-        return res.status(200).send({ message: "enedeço atualizado com sucesso" })
+        return res.status(201).send({ message: "enedeço atualizado com sucesso" })
     },
 
     async createSuperAdmin() {
@@ -167,7 +171,6 @@ const userController = {
                     "country": "US"
                 }
             }
-            console.log("Create Super Admin" + process.env.SUPER_ADMIN_EMAIL)
             await User.create(user)
         }
 

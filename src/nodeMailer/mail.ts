@@ -1,4 +1,5 @@
 import * as nodemailer from "nodemailer";
+require('dotenv/config')
 
 
 class Email {
@@ -8,7 +9,7 @@ class Email {
         secure: false,
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
+            pass: process.env.EMAIL_PASSWORD,
         },
     });
 }

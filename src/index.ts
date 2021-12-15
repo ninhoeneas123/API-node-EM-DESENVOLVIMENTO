@@ -4,7 +4,8 @@ import userRouter from './users/user-routes'
 import UserController from './users/user-controller'
 import courseController from './cousers/course-routes'
 import authController from './auth/auth-routes'
-import User from './users/schemas/users-schema'
+import swaggerUI from 'swagger-ui-express'
+import swaggerDocument from '../swagger.json'
 
 require('dotenv/config');
 
@@ -12,7 +13,7 @@ require('dotenv/config');
 const app = express();
 
 app.use(express.json(), userRouter, courseController, authController)
-
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 mongoose.connect(process.env.DB_URL).then(() => {
     UserController.createSuperAdmin()

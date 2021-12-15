@@ -1,0 +1,416 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Buy products API",
+        "description": "Documentation from products buy api",
+        "version": "1.0.0"
+    },
+    "basepath": "/",
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "user": "user@email.com",
+                                    "password": "12345678"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "username or password is invalid"
+                    }
+                }
+            }
+        },
+        "/users/find": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/users/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "zipcode": {
+                                            "type": "string"
+                                        },
+                                        "number": {
+                                            "type": "string"
+                                        },
+                                        "street": {
+                                            "type": "string"
+                                        },
+                                        "district": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        },
+                                        "state": {
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "name": "Jhon Carter",
+                                    "email": "jhon@email.com",
+                                    "password": "12345678",
+                                    "address": {
+                                        "zipcode": "44052001",
+                                        "number": "200",
+                                        "street": "15 Avenue",
+                                        "district": "vespuci",
+                                        "city": "Los Angeles",
+                                        "state": "California",
+                                        "country": "USA"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Email ja registrado em nosso sitema"
+                    },
+                    "201": {
+                        "description": "Usuario criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/users/forgot-password": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "user@email.com"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Por favor insira um email"
+                    },
+                    "200": {
+                        "description": "Caso o email esteja cadastrado no nosso sistema você recebera um código para recuperação de senha."
+                    }
+                }
+            }
+        },
+        "/users/recovery-password'": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "newPassword": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "code": "123456",
+                                    "newPassword": "12345678"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Nova senha definida com sucesso"
+                    },
+                    "400": {
+                        "description": "Codigo de redefinicção de senha invalido"
+                    }
+                }
+            }
+        },
+        "/users/new-password": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "newPassword": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "newPassword": "12345678"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Nova senha definida com sucesso"
+                    },
+                    "400": {
+                        "description": "Codigo de redefinicção de senha invalido"
+                    }
+                }
+            }
+        },
+        "/users/update": {
+            "put": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Jhon Due"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Alterações aplicadas com sucesso "
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/users/update-address": {
+            "put": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "zipcode": {
+                                        "type": "string"
+                                    },
+                                    "number": {
+                                        "type": "string"
+                                    },
+                                    "street": {
+                                        "type": "string"
+                                    },
+                                    "district": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "type": "string"
+                                    },
+                                    "country": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "zipcode": "44052001",
+                                    "number": "200",
+                                    "street": "15 Avenue",
+                                    "district": "vespuci",
+                                    "city": "Los Angeles",
+                                    "state": "California",
+                                    "country": "USA"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Alterações aplicadas com sucesso "
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/users/delete/": {
+            "delete": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario excluido"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/courses/find": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario excluido"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        }
+    }
+}
