@@ -87,7 +87,6 @@ const userController = {
     async passwordRecovery(req: Request, res: Response) {
         const data = req.body;
         const codeRecovery: any = await PasswordRecovery.find({ code: data.code })
-        console.log(codeRecovery)
         if (codeRecovery.length > 0) {
 
             const newPassword = await bcrypt.hash(data.newPassword, 8);
@@ -104,7 +103,6 @@ const userController = {
     async newPassword(req: Request, res: Response) {
         const data = req.body
         const id = req.userId
-        console.log(req.userId)
 
         if (!data.newPassword) return res.status(400).send("Insira uma nova senha")
 
