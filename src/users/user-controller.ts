@@ -12,12 +12,11 @@ require('dotenv/config');
 const userController = {
 
     async findUsers(req: Request, res: Response): Promise<any> {
-        console.log(req.userId)
         const query = req.query
         let result
         if (query.name) {
             const name = query.name.toString()
-            result = await User.find({ name: name })
+            result = await User.find({name: {"$regex": `${name}`, "$options": "i"}})
 
             if (result.length === 0) return res.status(400).send({ message: "Usuário não encontrado" })
 

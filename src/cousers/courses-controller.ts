@@ -7,7 +7,22 @@ import User from '../users/schemas/users-schema'
 class CourseController {
 
     public async allCourses(req: Request, res: Response): Promise<Response> {
-        //const users  = await User.find()
+        const query = req.query
+        let result
+        if (query.name) {
+            const name = query.name as string
+             result = await Course.find({ name: {"$regex": `${name}`, "$options": "i"}})
+
+            if (result.length === 0) {
+
+                return res.status(200).send({ result: result.length, message: "Nenhum curso encontrado" })
+
+            }
+            return res.status(200).send({ result: result.length, courses: result })
+        }
+         result = await Course.find()
+
+
         return res.json({ message: "users create" })
     }
     public async registerCourse(req: Request, res: Response): Promise<any> {

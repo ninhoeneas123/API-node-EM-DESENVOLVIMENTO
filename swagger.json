@@ -177,7 +177,7 @@
                 }
             }
         },
-        "/users/recovery-password'": {
+        "/users/recovery-password": {
             "post": {
                 "tags": [
                     "Users"
