@@ -6,7 +6,7 @@ import User from '../users/schemas/users-schema'
 
 class CourseController {
 
-    public async index(req: Request, res: Response): Promise<Response> {
+    public async allCourses(req: Request, res: Response): Promise<Response> {
         //const users  = await User.find()
         return res.json({ message: "users create" })
     }

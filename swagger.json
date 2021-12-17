@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "Buy products API",
-        "description": "Documentation from products buy api",
+        "title": "Courses API",
+        "description": "Documentation from courses buy api",
         "version": "1.0.0"
     },
     "basepath": "/",
@@ -389,6 +389,38 @@
                 ],
                 "tags": [
                     "Courses"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario excluido"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/purchase/": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Purchases"
                 ],
                 "parameters": [
                     {
