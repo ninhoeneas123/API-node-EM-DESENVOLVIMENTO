@@ -67,6 +67,9 @@ class CourseController {
         })
         return res.status(201).send({ messagem: "Curso editado com sucesso." })
     }
+    public async deleteCourse(req: Request, res: Response){
+        
+    }
 }
 
 export default new CourseController();
