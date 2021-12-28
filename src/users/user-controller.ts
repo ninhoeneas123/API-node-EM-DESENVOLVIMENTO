@@ -1,7 +1,5 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import bcrypt from 'bcrypt'
-import sendWelcomeMail from './mail/send-welcome-email'
-import SendRecoveryPassword from './mail/send-recovery-password'
 import UserCases from './usecases/users-usecases'
 import RecoverCases from './usecases/recover-password-usecases'
 
@@ -18,12 +16,12 @@ const userController = {
 
     async registerUser(req: Request, res: Response): Promise<any> {
         const data = req.body
-        const hashPassword = await bcrypt.hash(data.password, 8);
         const user = {
             "name": data.name.toLowerCase(),
-            "password": hashPassword,
+            "password": data.password,
             "email": data.email,
             "function": data.function,
+            "phone": data.phone,
             "admin": data.admin,
             "address": {
                 "zipcode": data.address.zipcode,
@@ -37,7 +35,7 @@ const userController = {
         }
         const returnStatus = await UserCases.caseRegisterUser(user)
 
-        res.status(returnStatus.code).send(returnStatus.message)
+        res.status(returnStatus.code).send(returnStatus.return)
 
     },
 

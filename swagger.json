@@ -412,6 +412,79 @@
                 }
             }
         },
+        "/courses/register": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "duration": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "theme": {
+                                        "type": "string"
+                                    },
+                                    "classes": {
+                                        "type": "numer"
+                                    },
+                                    "teacher": {
+                                        "type": "array"
+                                    },
+                                    "sales": {
+                                        "type": "number"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Course Name",
+                                    "duration":"00:25",
+                                    "description": "description for course",
+                                    "theme": "theme for the course",
+                                    "classes":5,
+                                    "theacher":[
+                                        {
+                                            "id":"0000",
+                                            "name":"Professor 1"
+                                        },
+                                        {
+                                            "id":"0001",
+                                            "name":"Professor 2"
+                                        }
+                                    ],
+                                    "sales": 55
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Curso cadastrado com sucesso"
+                    },
+                    "400":{
+                        "description":"Ja existe um curso com esse nome."
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
         "/purchase/": {
             "get": {
                 "security": [

@@ -1,37 +1,24 @@
 import { Request, Response } from 'express'
 import Course from './schemas/create-course-schema'
-import User from '../users/schemas/users-schema'
-
+import CasesUserDataBase from '../users/database-cases/users-database-cases'
+import CoursesCases from './use-cases/courses-usecases'
 
 
 class CourseController {
 
-    public async allCourses(req: Request, res: Response): Promise<Response> {
+    public async findCourses(req: Request, res: Response): Promise<Response> {
         const query = req.query
-        let result
-        if (query.name) {
-            const name = query.name as string
-             result = await Course.find({ name: {"$regex": `${name}`, "$options": "i"}})
 
-            if (result.length === 0) {
+        const statusReturn = await CoursesCases.findCourses(query)
 
-                return res.status(200).send({ result: result.length, message: "Nenhum curso encontrado" })
-
-            }
-            return res.status(200).send({ result: result.length, courses: result })
-        }
-         result = await Course.find()
-
-
-        return res.json({ message: "users create" })
+        return res.status(statusReturn.code).send(statusReturn.return)
     }
+
     public async registerCourse(req: Request, res: Response): Promise<any> {
         const userId = req.userId
         const data = req.body
 
-        const userData = await User.findOne({ id: userId })
-        console.log(userData)
-
+        const userData = await CasesUserDataBase.findUserForId(userId)
         const newCourse = {
             name: data.name,
             duration: data.duration,
@@ -44,32 +31,32 @@ class CourseController {
             sales: data.sales,
         }
 
-        await Course.create(newCourse)
+        const statusReturn = await CoursesCases.caseCreateCourse(newCourse)
 
-        return res.status(200).send({ messagem: "Curso criado com sucesso." })
-
-
+        return res.status(statusReturn.code).send(statusReturn.return)
     }
     public async updateCourse(req: Request, res: Response): Promise<Response> {
         const data = req.body
-        const query = req.query
-
-        if (Object.keys(query).length === 0) {
-            return res.status(400).send({ messagem: "Por favor selecione um curso" })
+        const query = req.params
+        const updateCourse = {
+            name: data.name,
+            duration: data.duration,
+            description: data.description,
+            theme: data.theme
         }
-        await Course.updateOne({ _id: query.idCourse }, {
-            $set: {
-                name: data.name,
-                duration: data.duration,
-                description: data.description,
-                theme: data.theme
-            }
-        })
-        return res.status(201).send({ messagem: "Curso editado com sucesso." })
+        const statusReturn = await CoursesCases.updateCourse(updateCourse, query.id)
+        console.log(statusReturn)
+
+        return res.status(statusReturn.code).send(statusReturn.return)
     }
-    public async deleteCourse(req: Request, res: Response){
-        
+    public async deleteCourse(req: Request, res: Response) {
+        const params = req.params
+       
+        const statusReturn = await CoursesCases.deleteCourse(params.id)
+
+        return res.status(statusReturn.code).send(statusReturn.return)
     }
+
 }
 
 export default new CourseController();

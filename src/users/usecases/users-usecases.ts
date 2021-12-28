@@ -1,13 +1,9 @@
-import sendWelcomeMail from '../mail/send-welcome-email'
-import SendRecoveryPassword from '../mail/send-recovery-password'
 import UserCasesDataBase from '../database-cases/users-database-cases'
 import bcrypt from 'bcrypt'
 
-
 class UserCases {
 
-
-     valityPassword(password: string) {
+    valityPassword(password: string) {
         let statusReturn
         var passwordSplit = password.split('')
         if (passwordSplit.length < 6) {
@@ -20,26 +16,43 @@ class UserCases {
             return statusReturn
         }
     }
+    async passwordExists(idUser: string, password: string) {
+        let statusReturn
+        const userData = await UserCasesDataBase.findUserForId(idUser)
+        const comparePasswords = bcrypt.compareSync(password, userData.password)
+        if (comparePasswords == false) {
+            statusReturn = {
+                code: 400,
+                return: { message: 'Senha atual invalida' }
+            }
+            return statusReturn
+        }
+
+    }
+
     async caseRegisterUser(data: any) {
         const userData = data
         let statusReturn
+
         const userEmail = await UserCasesDataBase.valitUserForEmail(userData.email)
         if (userEmail) {
             statusReturn = {
                 code: 400,
-                return: { message: "Email ja registrado em nosso sitema" }
+                return: { message: "Email ja registrado em nosso sistema" }
             }
             return statusReturn
         }
-        // const valityPassword = this.valityPassword(data.password)
-        // if (valityPassword) {
-        //     statusReturn = valityPassword
-        //     return statusReturn
-        // }
+        const valityPassword = this.valityPassword(userData.password)
+        if (valityPassword) {
+            statusReturn = valityPassword
+            return statusReturn
+        }
+        const hashPassword = await bcrypt.hash(data.password, 8);
+        userData.password = hashPassword
         await UserCasesDataBase.createUser(userData)
         statusReturn = {
             code: 200,
-            message: { message: "Usuário Criado com sucesso" }
+            return: { message: "Usuario registrado com sucesso" }
         }
         return statusReturn
     }
@@ -48,7 +61,6 @@ class UserCases {
         const userName = data
         let returnStatus = {}
         let dataResult
-
         if (userName) {
             dataResult = await UserCasesDataBase.findUserForName(userName)
             if (dataResult.length === 0) {
@@ -60,14 +72,14 @@ class UserCases {
             }
             returnStatus = {
                 code: 201,
-                return: dataResult
+                return: {countResult:dataResult.length , dataResult }
             }
             return returnStatus
         }
         dataResult = await UserCasesDataBase.findAllUsers()
         returnStatus = {
             code: 201,
-            return: dataResult
+            return: {countResult:dataResult.length , dataResult }
         }
         return returnStatus
     }
@@ -81,9 +93,14 @@ class UserCases {
             }
             return returnStatus
         }
-        const valityPassword = this.valityPassword(data.newPassword)
+        const valityPassword = await this.valityPassword(data.newPassword)
         if (valityPassword) {
             returnStatus = valityPassword
+            return returnStatus
+        }
+        const passwordExistes = await this.passwordExists(id, data.password)
+        if (passwordExistes) {
+            returnStatus = passwordExistes
             return returnStatus
         }
 
@@ -92,7 +109,7 @@ class UserCases {
             code: 200,
             return: { message: "Senha alterada com sucesso" }
         }
-
+        console.log(returnStatus)
         return returnStatus
     }
 

@@ -40,7 +40,7 @@ class RecoverCases {
         if (!code || !newPassword) {
             statusReturn = {
                 code: 400,
-                return: { message: "Por favor insira o código e a nova senha" }
+                return: { message: "Por favor insira o código de recuperação" }
             }
             return statusReturn
         }
@@ -68,7 +68,6 @@ class RecoverCases {
         return statusReturn
 
     }
-
 
 
 }

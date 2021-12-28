@@ -6,8 +6,9 @@ import CourseController from './courses-controller'
 const courseRoutes = Router()
 
 
-courseRoutes.get('/courses', CourseController.allCourses)
-courseRoutes.post('/courses/register',authMiddleware, CourseController.registerCourse)
-courseRoutes.post('/courses/update/',authMiddleware, CourseController.updateCourse)
+courseRoutes.get('/courses/find', CourseController.findCourses)
+courseRoutes.post('/courses/register', authMiddleware, CourseController.registerCourse)
+courseRoutes.put('/courses/update-:id', authMiddleware, CourseController.updateCourse)
+courseRoutes.delete('/courses/delete/:id', authMiddleware, CourseController.deleteCourse)
 
 export default courseRoutes

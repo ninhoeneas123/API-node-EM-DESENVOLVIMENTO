@@ -1,13 +1,14 @@
 import { Schema, model, Document } from 'mongoose';
 
 
-
-
 export class Teacher{
  id:"string"
  name:"string"
 }
 
+export class students{
+    id:"string"
+}
 
 interface CourseInterface extends Document {
     name?: string

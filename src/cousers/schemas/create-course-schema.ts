@@ -1,8 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
 
-
-
-
 export class Teacher{
  id:"string"
  name:"string"
@@ -14,6 +11,7 @@ interface CourseInterface extends Document {
     duration?: string
     description?: string
     theme?: string
+    classes?:string
     teacher?: Array<Teacher>
     sales?: number
 }
@@ -36,6 +34,11 @@ const CourseSchema = new Schema({
         type: 'string',
         required: true,
         default: 'without description'
+    },
+    classes: {
+        type: 'number',
+        required: true,
+        default: '0'
     },
     teacher: {
         id:{

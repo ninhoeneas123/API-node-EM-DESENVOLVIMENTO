@@ -1,9 +1,8 @@
 import User from '../schemas/users-schema'
-import PasswordRecovery from '../schemas/password-recover'
 import bcrypt from 'bcrypt'
 
 
-class UserCasesDataBase {
+class CasesUserDataBase {
 
     async createUser(dataUser: any) {
 
@@ -18,6 +17,11 @@ class UserCasesDataBase {
     async findUserForName(name: any) {
         const users = await User.find({ name: { "$regex": `${name}`, "$options": "i" } })
         return users
+    }
+    async findUserForId(id: string) {
+        const users = await User.findOne({ _id: id })
+        return users
+
     }
     async findAllUsers() {
         const users = await User.find()
@@ -38,4 +42,4 @@ class UserCasesDataBase {
     }
 
 }
-export default new UserCasesDataBase()
+export default new CasesUserDataBase()

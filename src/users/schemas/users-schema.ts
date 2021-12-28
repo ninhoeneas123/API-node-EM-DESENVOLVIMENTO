@@ -37,6 +37,10 @@ const UserSchema = new Schema({
         required: true,
         default: 'aluno',
     },
+    phone:{
+        type: 'string',
+        required: true,
+    },
     admin:{
         type: 'boolean',
         default: false,
