@@ -452,18 +452,18 @@
                                 },
                                 "example": {
                                     "name": "Course Name",
-                                    "duration":"00:25",
+                                    "duration": "00:25",
                                     "description": "description for course",
                                     "theme": "theme for the course",
-                                    "classes":5,
-                                    "theacher":[
+                                    "classes": 5,
+                                    "theacher": [
                                         {
-                                            "id":"0000",
-                                            "name":"Professor 1"
+                                            "id": "0000",
+                                            "name": "Professor 1"
                                         },
                                         {
-                                            "id":"0001",
-                                            "name":"Professor 2"
+                                            "id": "0001",
+                                            "name": "Professor 2"
                                         }
                                     ],
                                     "sales": 55
@@ -476,8 +476,96 @@
                     "201": {
                         "description": "Curso cadastrado com sucesso"
                     },
-                    "400":{
-                        "description":"Ja existe um curso com esse nome."
+                    "400": {
+                        "description": "Ja existe um curso com esse nome."
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/courses/update/:id": {
+            "put": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "duration": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "theme": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Course Name",
+                                    "duration": "00:25",
+                                    "description": "description for course",
+                                    "theme": "theme for the course"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Curso editado com sucesso"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            }
+        },
+        "/courses/delete/:id": {
+            "delete": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Curso excluido com sucesso"
                     },
                     "401": {
                         "description": "unauthorized"

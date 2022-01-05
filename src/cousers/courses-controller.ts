@@ -24,6 +24,7 @@ class CourseController {
             duration: data.duration,
             description: data.description,
             theme: data.theme,
+            value: data.value,
             teacher: {
                 id: userId,
                 name: userData.name
